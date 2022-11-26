@@ -6,9 +6,10 @@ import lib.*;
 import lib.entities.Creature;
 import lib.entities.JackTorrance;
 import lib.exceptions.OverlookExplosionException;
+import lib.exceptions.UseFailureException;
 
 public class Main {	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws UseFailureException {
 		// Setting up a scene
 		var jackTorrance = new JackTorrance();
 		var creature = new Creature()
@@ -38,20 +39,20 @@ public class Main {
 		boiler.increasePressure();
 
 		try {
-			var useresult = creature.uses(boiler);
+			creature.uses(boiler);
 	
-			if (useresult.success) {
-				creature
-					.stopFeeling(Emotion.Fear)
-					.stopFeeling(Emotion.Panic)
-					.feel(Emotion.Ecstasy);
-	
-				return;
-			}
+			creature
+				.stopFeeling(Emotion.Fear)
+				.stopFeeling(Emotion.Panic)
+				.feel(Emotion.Ecstasy);
+
+			return;
 		} catch (OverlookExplosionException err) {
 			creature.speaks("Нет! Нельзя! Нельзя! НЕЛЬЗЯ!");
 			throw err;
+		} catch (UseFailureException err) {
+			System.out.println("Creature failed to use the valve");
+			throw err;
 		}
-
 	}
 }

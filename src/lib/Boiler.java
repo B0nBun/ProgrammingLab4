@@ -1,8 +1,8 @@
 package lib;
 
 import lib.exceptions.OverlookExplosionException;
+import lib.exceptions.UseFailureException;
 import lib.interfaces.Usable;
-import lib.utils.UseResult;
 
 public class Boiler implements Usable {
     private Valve valve;
@@ -14,12 +14,10 @@ public class Boiler implements Usable {
     }
     
     @Override
-    public UseResult use() {
-        UseResult useresult = this.valve.use();
-        if (useresult.success) {
-            this.relievePressure();
-        }
-        return useresult;
+    public Temperature use() throws UseFailureException {
+        Temperature temp = this.valve.use();
+        this.relievePressure();
+        return temp;
     }
 
     public Boiler increasePressure() {

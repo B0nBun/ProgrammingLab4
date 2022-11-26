@@ -1,8 +1,8 @@
 package lib.entities;
 
 import lib.Temperature;
+import lib.exceptions.UseFailureException;
 import lib.interfaces.Usable;
-import lib.utils.UseResult;
 import java.util.HashSet;
 
 public class JackTorrance extends Entity {
@@ -22,18 +22,14 @@ public class JackTorrance extends Entity {
     }
 
     @Override
-    public UseResult uses(Usable thing) {
-        UseResult useresult = thing.use();
+    public Temperature uses(Usable thing) throws UseFailureException {
+        Temperature temp = thing.use();
         
-        if (!useresult.success) {
-            return useresult;
-        }
-        
-        if (useresult.temp.hottereq(Temperature.Hot)) {
+        if (temp.hottereq(Temperature.Hot)) {
             System.out.println("Jack Torrance's hands are melting");
         }
 
-        return useresult;
+        return temp;
     }
 
     @Override

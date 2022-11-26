@@ -1,7 +1,7 @@
 package lib;
 
+import lib.exceptions.UseFailureException;
 import lib.interfaces.Usable;
-import lib.utils.UseResult;
 
 public class Valve implements Usable {
     private Temperature temperature;
@@ -15,11 +15,11 @@ public class Valve implements Usable {
     }
 
     @Override
-    public UseResult use() {
+    public Temperature use() throws UseFailureException {
         if (this.willJam()) {
-            return new UseResult(false, null);
+            throw new UseFailureException("The valve jammed!");
         }
-        return new UseResult(true, this.temperature);
+        return this.temperature;
     }
 
     @Override

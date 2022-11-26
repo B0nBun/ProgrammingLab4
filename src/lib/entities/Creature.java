@@ -1,7 +1,8 @@
 package lib.entities;
 
+import lib.Temperature;
+import lib.exceptions.UseFailureException;
 import lib.interfaces.Usable;
-import lib.utils.UseResult;
 import java.util.HashSet;
 
 public class Creature extends Entity {
@@ -32,17 +33,18 @@ public class Creature extends Entity {
     }
 
     @Override
-    public UseResult uses(Usable thing) {
-        UseResult useresult = null;
+    public Temperature uses(Usable thing) throws UseFailureException {
         int i = 0;
-
-        while ((useresult == null || !useresult.success) && (i < 5)) {
-            System.out.println("Creature tries to use " + thing.toString());
-            useresult = this.possessedEntity.uses(thing);
+        while (i < 5) {
             i ++;
+            try {
+                Temperature temp = this.possessedEntity.uses(thing);
+                return temp;
+            } catch (UseFailureException err) {
+                continue;
+            }
         }
-
-        return useresult;
+        throw new UseFailureException("Creature couldn't use this thing: " + thing);
     }
 
     @Override

@@ -2,8 +2,9 @@ package lib.entities;
 
 import java.util.HashSet;
 import lib.Emotion;
+import lib.Temperature;
+import lib.exceptions.UseFailureException;
 import lib.interfaces.Usable;
-import lib.utils.UseResult;
 
 public abstract class Entity {
     private HashSet<Emotion> emotions = new HashSet<>();
@@ -26,7 +27,7 @@ public abstract class Entity {
 
     abstract public String name();
     abstract public Entity speaks(String phrase);
-    abstract public UseResult uses(Usable thing);
+    abstract public Temperature uses(Usable thing) throws UseFailureException;
 
     @Override
     public String toString() {
