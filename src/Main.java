@@ -5,6 +5,7 @@ import lib.location.Room;
 import lib.*;
 import lib.entities.Creature;
 import lib.entities.JackTorrance;
+import lib.exceptions.OverlookExplosionException;
 
 public class Main {	
 	public static void main(String[] args) {
@@ -36,26 +37,20 @@ public class Main {
 		creature.speaks("Нет, этого нельзя допустить!");
 		boiler.increasePressure();
 
-		boolean wasPressureHigh = boiler.isPressureTooHigh();
-		
-		var useresult = creature.uses(boiler);
-
-		if (useresult.success) {
-			creature
-				.stopFeeling(Emotion.Fear)
-				.stopFeeling(Emotion.Panic)
-				.feel(Emotion.Ecstasy);
-				
-			if (wasPressureHigh) {
-				boiler.explode();
+		try {
+			var useresult = creature.uses(boiler);
+	
+			if (useresult.success) {
+				creature
+					.stopFeeling(Emotion.Fear)
+					.stopFeeling(Emotion.Panic)
+					.feel(Emotion.Ecstasy);
+	
+				return;
 			}
-
-			return;
-		}
-
-		boiler.increasePressure();
-		if (boiler.isPressureTooHigh()) {
-			boiler.explode();
+		} catch (OverlookExplosionException err) {
+			creature.speaks("Нет! Нельзя! Нельзя! НЕЛЬЗЯ!");
+			throw err;
 		}
 
 	}

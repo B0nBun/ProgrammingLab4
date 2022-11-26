@@ -1,6 +1,6 @@
 package lib;
 
-import java.lang.RuntimeException;
+import lib.exceptions.OverlookExplosionException;
 import lib.interfaces.Usable;
 import lib.utils.UseResult;
 
@@ -30,7 +30,8 @@ public class Boiler implements Usable {
 
     private Boiler relievePressure() {
         if (this.isPressureTooHigh()) {
-            System.out.println("Boiler's pressure relieved from being too high!");
+            this.increasePressure();
+            throw new OverlookExplosionException("Boiler's pressure relieved from being too high!");
         }
         
         this.manometr.decreasePressure(0.25);
@@ -39,10 +40,6 @@ public class Boiler implements Usable {
 
     public boolean isPressureTooHigh() {
         return this.manometr.isTooHigh();
-    }
-
-    public void explode() {
-        throw new RuntimeException("The 'Overlook' boiler exploded!");
     }
 
     @Override
