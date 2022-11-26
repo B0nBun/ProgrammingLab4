@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import lib.entities.Entity;
+import lib.interfaces.Damagable;
 
-public class Location {
+public class Location implements Damagable {
     private HashMap<Room, ArrayList<Entity>> rooms;
 
     public Location(HashMap<Room, ArrayList<Entity>> rooms) {
@@ -55,4 +56,10 @@ public class Location {
     public void comeIn(Entity entity, Room room) {
         this.rooms.get(room).add(entity);
     } 
+
+    public void damage() {
+        for (Room room : this.rooms.keySet()) {
+            room.damage();
+        }
+    }
 }
