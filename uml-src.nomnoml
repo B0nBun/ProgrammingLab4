@@ -1,0 +1,98 @@
+#.interface: fill=#bdf dashed italic
+#.abstract: fill=#fb7 title=italic
+
+[Room|
+	private String name|
+    @Override toString();
+    @Override hashCode()
+]
+
+[Location|
+	private HashMap<Room, ArrayList<Entity>> rooms|
+    public void transferTo(Entity entity, Room room);
+    public Room getRoomByEntity(Entity entity)
+]
+
+[<interface>Usable||
+	public UseResult use()
+]
+
+[Usable]-/-[UseResult|
+	public boolean success;
+    public Temperature temp
+]
+
+[Usable]<:-[Valve|
+	private Temperature temperature|
+    private boolean willJam();
+    @Override use()
+]
+
+[Valve]-/-[<table>enum Temperature|
+  Freezing ||
+  Cold |
+  Normal |
+  Hot |
+  Melting
+]
+
+[<interface>Measurable||
+	public String units()
+    public int measure();
+    public boolean isTooHigh();
+    public boolean isTooLow()
+]
+
+[Measurable]<:-[Manometr|
+	private double pressure|
+    public void increasePressure(double delta);
+    public void decreasePressure(double delta);
+    @Override units();
+    @Override measure(...);
+    @Override isTooHigh();
+    @Override isTooLow()
+]
+
+[Usable]<:-[Boiler|
+	private Valve valve;
+    private Manometr manometr|
+    @Override use();
+    public void increasePressure();
+    public void relievePressure();
+    public boolean isPressureTooHigh();
+    private void explode()
+]
+
+[<abstract>abstract Entity|
+	private String name;
+    private Set<Emotion> emotions|
+    public String name();
+    public feel(Emotion emotion);
+    public stopFeeling(Emotion emotion);
+	abstract public void speaks(String phrase);
+    abstract public void uses(Usable thing);
+    @Override toString()
+]
+
+[abstract Entity]<:-[Jack Torrance|
+	...;
+	@Override speaks(...);
+    @Override uses(...)
+]
+
+[abstract Entity]<:-[Creature|
+	...;
+	private Entity possessedEntity|
+    ...;
+    @Override speaks(...);
+    @Override uses(...);
+    @Override equals(...);
+    public void possess(Entity entity);
+    public void possessedEntity()
+]
+
+[abstract Entity]-/-[<table> enum Emotions |
+    Fear ||
+    Panic |
+    Ecstasy
+]
