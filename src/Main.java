@@ -12,19 +12,27 @@ import lib.exceptions.UseFailureException;
 import lib.interfaces.Damagable;
 
 public class Main {	
-	private static class OverlookPipe implements Damagable {
-		static int count = 0;
-		int pipeNumber;
+	private static class Roof extends Room {
+		private int pipeCount = 0;
 		
-		public OverlookPipe() {
-			OverlookPipe.count += 1;
-			this.pipeNumber = OverlookPipe.count;
-		}
+		public class OverlookPipe implements Damagable {
+			private int pipeNumber;
 
-		public void damage() {
-			System.out.println("Overlook pipe #" + this.pipeNumber + " spew flames");
+			private OverlookPipe() {
+				Roof.this.pipeCount += 1;
+				this.pipeNumber = Roof.this.pipeCount;
+			}
+
+			public void damage() {
+				System.out.println("Overlook pipe #" + this.pipeNumber + " spew flames from " + Roof.this);
+			}
+		}
+		
+		public Roof(String name) {
+			super(name + "-roof");
 		}
 	}
+
 	
 	public static void main(String[] args) throws UseFailureException {
 		// Setting up a scene
@@ -46,13 +54,17 @@ public class Main {
 					System.out.println("The bath broke in two pieces");
 				}
 			});
-		var roof = new Room("roof");
+		var westroof = new Roof("west");
+		var eastroof = new Roof("east");
 		
-		// Adding five pipes
+		// Adding five pipes to roofs
 		Stream.iterate(0, i -> i + 1)
-			.limit(5)
-			.map(x -> new OverlookPipe())
-			.forEach(roof::addDamagable);
+			.limit(3)
+			.map(x -> westroof.new OverlookPipe())
+			.forEach(westroof::addDamagable);
+		
+		eastroof.addDamagable(eastroof.new OverlookPipe());
+		eastroof.addDamagable(eastroof.new OverlookPipe());
 		
 		
 		var location = new Location()
@@ -60,7 +72,8 @@ public class Main {
 			.addRoom(basement, new ArrayList<>(List.of(jackTorrance, creature)))
 			.addRoom(hall)
 			.addRoom(boilerRoom)
-			.addRoom(roof);
+			.addRoom(westroof)
+			.addRoom(eastroof);
 
 		var boiler = new Boiler(Temperature.Melting);
 
