@@ -1,26 +1,59 @@
 #.interface: fill=#bdf dashed italic
 #.abstract: fill=#fb7 title=italic
+#.exception: fill=tomato
 
-[Room|
-	private String name|
-    @Override toString();
-    @Override hashCode()
+[Main|
+	public static void main(String\[\] args) throws UseFailureException|
+    private static class Roof
 ]
 
-[Location|
+[Main]_/_[<note> В методе "Main.main" будут создаваться локальный и анонимные классы, имплементирующие Damagable]
+
+[Main]<__[Roof]
+[Room]<-[Roof|
+	private int pipeCount|
+    public class OverlookPipe
+]
+
+
+[Damagable]<:-[OverlookPipe]
+[Roof]<--[OverlookPipe|
+	private int pipeNumber|
+    @Override damage()
+]
+
+[<interface> Damagable|
+	public void damage()
+]
+[Damagable]<:-[OverlookPipe|
+	static int count;
+    int pipeNumber|
+	@Override damage()
+]
+
+[Damagable]<:-[Room|
+	private String name
+    private ArrayList<Damagable> damagableStuff|
+    public Room addDamagable(Damagable thing);
+    @Override toString();
+    @Override hashCode();
+    @Override damage()
+]
+
+[Damagable]<:-[Location|
 	private HashMap<Room, ArrayList<Entity>> rooms|
     public void transferTo(Entity entity, Room room);
-    public Room getRoomByEntity(Entity entity)
+    public Room getRoomByEntity(Entity entity);
+    @Override damage()
 ]
 
 [<interface>Usable||
-	public UseResult use()
+	public Temperature use() throws UseFailureException
 ]
 
-[Usable]-/-[UseResult|
-	public boolean success;
-    public Temperature temp
-]
+[Usable]-/-[<exception> Exception]
+
+[Exception]<-[<exception>UseFailureException extends Exception]
 
 [Usable]<:-[Valve|
 	private Temperature temperature|
@@ -70,7 +103,7 @@
     public feel(Emotion emotion);
     public stopFeeling(Emotion emotion);
 	abstract public void speaks(String phrase);
-    abstract public void uses(Usable thing);
+    abstract public Temperature uses(Usable thing) throws UseFailureException;
     @Override toString()
 ]
 
@@ -90,6 +123,10 @@
     public void possess(Entity entity);
     public void possessedEntity()
 ]
+
+[<exception> RuntimeException]
+
+[RuntimeException]<-[<exception> OverlookExplosionException]
 
 [abstract Entity]-/-[<table> enum Emotions |
     Fear ||
