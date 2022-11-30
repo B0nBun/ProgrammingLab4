@@ -39,14 +39,22 @@ public class Main {
 		var jackTorrance = new JackTorrance();
 		var creature = new Creature()
 			.possess(jackTorrance);
+
+		class Door implements Damagable {
+			public void damage() {
+				System.out.println("The door flew off it's hinges");
+			}
+		}
 			
 		var basement = new Room("basement")
 			.addDamagable(new Damagable() {
 				public void damage() {
 					System.out.println("The firebox exploded");
 				}	
-			});
-		var hall = new Room("hallway");
+			})
+			.addDamagable(new Door());
+		var hall = new Room("hallway")
+			.addDamagable(new Door());
 		var boilerRoom = new Room("boiler-room");
 		var room217 = new Room("hotel-room #217")
 			.addDamagable(new Damagable() {
